@@ -21,8 +21,46 @@
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  throw new Error('Not implemented');
+
+function getSiblings([rowIndex, colIndex]) {
+  return [
+    [rowIndex - 1, colIndex - 1],
+    [rowIndex - 1, colIndex],
+    [rowIndex - 1, colIndex + 1],
+    [rowIndex, colIndex - 1],
+    [rowIndex, colIndex + 1],
+    [rowIndex + 1, colIndex - 1],
+    [rowIndex + 1, colIndex],
+    [rowIndex + 1, colIndex + 1],
+  ];
+}
+
+function isSibling(sibling, matrix) {
+  return !!(sibling[0] >= 0
+    && sibling[1] >= 0
+    && sibling[0] < matrix.length
+    && sibling[1] < matrix[0].length
+  );
+}
+
+function minesweeper(matrix) {
+  const result = matrix.map((item) => item.map(() => 0));
+
+  matrix.forEach((row, rowIndex) => {
+    row.forEach((col, colIndex) => {
+      if (col) {
+        const siblings = getSiblings([rowIndex, colIndex]);
+
+        siblings.forEach((sibling) => {
+          if (isSibling(sibling, matrix)) {
+            result[sibling.shift()][sibling.pop()]++;
+          }
+        });
+      }
+    });
+  });
+
+  return result;
 }
 
 module.exports = minesweeper;
